@@ -20,7 +20,7 @@ function PokemonCard({
   return (
     <>
       <Link to={`/pokemon/${pokemon.id}`}>
-        <div className="rounded-md border-blue-600 border-2 p-4 flex flex-col gap-5 w-60">
+        <div className="rounded-md border-blue-600 border-2 p-4 flex flex-col gap-5 relative md:w-60">
           <div className="cover h-36 flex justify-center">
             <img src={pokemon.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites.showdown.front_default} 
             alt={pokemon.pokemon_v2_pokemonspeciesnames.find(
@@ -38,16 +38,16 @@ function PokemonCard({
               </p>
               <div className="flex gap-4">
                 {capturedPokemon.includes(pokemon.id) && (
-                <TbPokeball className="text-blue-700" />
+                <TbPokeball className="text-blue-700 dark:text-blue-500" />
                 )}
                 {bookmarkPokemon.includes(pokemon.id.toString()) ? (
-                <FaBookmark className="text-blue-700" />
+                <FaBookmark className="text-blue-700 dark:text-blue-500" />
                 ) : (
-                <FaRegBookmark className="text-blue-700" />
+                <FaRegBookmark className="text-blue-700 dark:text-blue-500" />
                 )}
               </div>
               </div>
-              <span className="w-full text-xs text-gray-600 font-semibold">
+              <span className="w-full text-xs text-gray-600 dark:text-blue-500 font-semibold">
               n°{transformId(pokemon.id)}
               </span>
             </div>

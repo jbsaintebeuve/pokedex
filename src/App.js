@@ -10,6 +10,7 @@ import pokemonData from "./pokemon.json";
 import { LangProvider } from "./providers/LangContext";
 import DataProvider from "./providers/DataContext";
 import GenProvider from "./providers/GenContext";
+import { ThemeProvider } from "./providers/ThemeContext";
 
 function App() {
   const [langAvailable, setLangAvailable] = useState({});
@@ -56,6 +57,7 @@ function App() {
       <LangProvider>
         <GenProvider>
         <DataProvider>
+          <ThemeProvider>
         <Routes>
           <Route
             path="/"
@@ -83,6 +85,7 @@ function App() {
             />
           </Route>
         </Routes>
+        </ThemeProvider>
         </DataProvider>
         </GenProvider>
       </LangProvider>

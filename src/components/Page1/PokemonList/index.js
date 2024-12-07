@@ -150,9 +150,9 @@ function PokemonList({
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <div className="flex gap-5 w-full px-5 justify-between items-center">
+      <div className="flex gap-5 w-full flex-col md:flex-row flex-wrap md:px-5 md:justify-between items-center">
         <div className="flex gap-4 items-center">
-          <div className="flex gap-4">
+          <div className="flex md:gap-4 gap-2 min-w-fit md:text-lg items-center">
             {(selectedSort === "id" ||
               selectedSort === "weight" ||
               selectedSort === "height") &&
@@ -188,14 +188,14 @@ function PokemonList({
           </div>
           <div className="flex gap-4">
             <div
-              className={`flex gap-2 items-center text-sm text-blue-700 hover:bg-slate-100 px-2 py-1 hover:cursor-pointer rounded-md border  ${displayBookmark ? "border-blue-700 bg-slate-100" : "border-none"
+              className={`flex gap-2 items-center text-sm text-blue-700  dark:hover:bg-slate-800 hover:bg-slate-100 px-2 py-1 hover:cursor-pointer rounded-md border  ${displayBookmark ? "border-blue-700 bg-slate-100 dark:bg-blue-800 dark:border-blue-900 dark:text-white" : "border-none dark:text-blue-500"
                 }`}
               onClick={() => setDisplayBookmark(!displayBookmark)}
             >
               {displayBookmark ? <FaBookmark /> : <FaRegBookmark />}
               <p className="font-semibold">Enregistré</p>
             </div>
-            <div className={`flex gap-2 items-center text-sm text-blue-700 hover:bg-slate-100 px-2 py-1 hover:cursor-pointer rounded-md border ${displayCaptured ? "border-blue-700 bg-slate-100" : "border-none"
+            <div className={`flex gap-2 items-center text-sm text-blue-700  dark:hover:bg-slate-800 hover:bg-slate-100 px-2 py-1 hover:cursor-pointer rounded-md border ${displayCaptured ? "border-blue-700 bg-slate-100 dark:bg-blue-800 dark:border-blue-900 dark:text-white" : "border-none dark:text-blue-500"
               }`}
               onClick={() => setDisplayCaptured(!displayCaptured)}
             >
@@ -208,7 +208,7 @@ function PokemonList({
           <p className="font-bold text-sm">Plage d'ID</p>
           <input
             type="number"
-            className="border-blue-700 border-2 w-20 rounded-md px-2 py-2"
+            className="border-blue-700 dark:bg-slate-900 border-2 w-20 rounded-md px-2 py-2"
             placeholder="min"
             onChange={(e) => setRangeId({ ...rangeId, min: e.target.value })}
             value={rangeId.min}
@@ -216,14 +216,14 @@ function PokemonList({
           <span>-</span>
           <input
             type="number"
-            className="border-blue-700 border-2 w-20 rounded-md px-2 py-2"
+            className="border-blue-700 dark:bg-slate-900 border-2 w-20 rounded-md px-2 py-2"
             placeholder="max"
             onChange={(e) => setRangeId({ ...rangeId, max: e.target.value })}
             value={rangeId.max}
           />
         </div>
       </div>
-      <section className="flex flex-wrap gap-5">
+      <section className="flex flex-col md:flex-row md:flex-wrap gap-5">
         {sortFilteredPokemon(filteredPokemon, selectedSort).length > 0 ? (
           sortFilteredPokemon(filteredPokemon, selectedSort).map(
             (pokemon) => (

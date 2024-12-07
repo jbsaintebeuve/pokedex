@@ -41,7 +41,7 @@ function MultiSelector({ selectedValues, onSelectValue, options, name, langValue
 
       {isSelectorOpen && (
         <div
-          className="origin-top-right absolute right-0 z-10 w-full max-h-64 overflow-y-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+          className="origin-top-right absolute right-0 z-10 w-full max-h-64 overflow-y-auto rounded-md shadow-lg bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
@@ -51,8 +51,8 @@ function MultiSelector({ selectedValues, onSelectValue, options, name, langValue
             {options.map((option) => (
               <div
                 key={option[0]}
-                className={`${selectedValues.includes(option[0]) ? "bg-gray-100" : ""
-                  } flex gap-2 items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full hover:cursor-pointer`}
+                className={`${selectedValues.includes(option[0]) ? "bg-gray-100 dark:bg-blue-800" : ""
+                  } flex gap-2 items-center px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-blue-900 dark:hover:text-white w-full hover:cursor-pointer`}
                 onClick={() => handleSelectChange(option[0])}
                 role="menuitem"
               >
