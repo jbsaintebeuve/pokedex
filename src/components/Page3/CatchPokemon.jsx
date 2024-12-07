@@ -6,11 +6,14 @@ import ButtonSecondary from "../common/ButtonSecondary";
 import Pokeball from "./Pokeball";
 import PokeballItem from "./PokeballItem";
 import background from "./background.jpg";
+import { useLang } from "../../providers/LangContext";
 
-function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
+function CatchPokemon({ pokeballs, setPokeballs }) {
   const [pokemon, setPokemon] = useState(
     JSON.parse(localStorage.getItem("spawnedPokemon")) || null
   );
+
+  const { langvalue } = useLang();
 
   useEffect(() => {
     localStorage.setItem("spawnedPokemon", JSON.stringify(pokemon));
@@ -105,8 +108,8 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
       );
       setPosition({ x: (window.innerWidth * 2) / 3, y: window.innerHeight - 150 });
       setSelectedPokeball("pokeball");
+    };
   };
-};
 
   const capture = (pokemon, ball) => {
     const captureProbability = {
@@ -127,23 +130,23 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
   };
 
   const handleDragStart = (e) => {
-    e.dataTransfer.setDragImage(new Image(), 0, 0); 
-  
+    e.dataTransfer.setDragImage(new Image(), 0, 0);
+
     const pokemonImg = document.querySelector(".pokemon-image");
-    
+
     if (pokemonImg) {
       let direction = 1;
       let position = -150;
       const range = 200;
       const speed = 5;
-  
+
       const animate = () => {
-        
+
         position += direction * speed;
         if (position >= range || position <= -range) {
-          direction *= -1; 
+          direction *= -1;
         }
-  
+
         pokemonImg.style.transform = `translateX(${position}px) translateY(-70px)`;
 
         requestAnimationFrame(animate);
@@ -152,21 +155,21 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
       animate();
     }
   };
-  
-  
+
+
 
 
   const handleDrag = (e) => {
     if (e.clientX !== 0 && e.clientY !== 0) {
       setPosition({
-        x: e.clientX - 50, 
+        x: e.clientX - 50,
         y: e.clientY - 50,
       });
     }
   };
 
   const handleDragOver = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
   };
 
   return (
@@ -185,7 +188,7 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
 
       {!isOnCapture &&
         pokeballs.find((pokeball) => pokeball.src === selectedPokeball).number >
-          0 && (
+        0 && (
           <div
             className=" z-10"
             draggable="true"
@@ -195,7 +198,7 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
             onDragEnd={handleDrop}
             style={{
               position: 'absolute',
-              left: `${position.x }px`,
+              left: `${position.x}px`,
               top: `${position.y - 50}px`,
               width: '100px',
               height: '100px',

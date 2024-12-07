@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Filter from "../../common/Filter";
 import Search from "../../common/Search";
 import PokemonList from "../PokemonList";
@@ -7,8 +7,9 @@ import { useLang } from "../../../providers/LangContext";
 function Main({pokemonData}){
     const [searchValue, setSearchValue] = useState("");
     const [filterTypeValues, setFilterValue] = useState([]);
-    const [valueWeightSlider, setValueWeightSlider] = useState([0, 0]);
-    const [valueHeightSlider, setValueHeightSlider] = useState([0, 0]);
+    const [valueWeightSlider, setValueWeightSlider] = useState([0,10000]);
+    const [valueHeightSlider, setValueHeightSlider] = useState([0,10000]);
+    
     const { langValue } = useLang();
     const handleSearchChange = (value) => {
         setSearchValue(value)

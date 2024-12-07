@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaFlag } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
 import { TbPokeball } from "react-icons/tb";
@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import Selector from "./Selector";
 import Toast from "./Toast";
 import { useLang } from "../../providers/LangContext";
+import { usePokemonData } from "../../providers/DataContext";
 
 
 function Header({
@@ -17,7 +18,7 @@ function Header({
   const [isPokeballAvailable, setIsPokeballAvailable] = useState(false);
   const [toastData, setToastData] = useState({ bool: false, message: "" });
 
-  const { langValue, handleLangValue } = useLang;
+  const { langValue, handleLangValue } = useLang();
 
   const getPokeball = () => {
     if (isPokeballAvailable) {
@@ -66,10 +67,10 @@ function Header({
   return (
     <header className="bg-blue-700 flex justify-between px-5 py-2 items-center">
       <div className="flex gap-6 items-center">
-      <Link to="/">
-        <Logo />
-      </Link>
-      <Link to="/minigame" className="font-semibold text-white hover:underline hover:cursor-pointer">Jouer</Link>
+        <Link to="/">
+          <Logo />
+        </Link>
+        <Link to="/minigame" className="font-semibold text-white hover:underline hover:cursor-pointer">Jouer</Link>
       </div>
       <div className="flex gap-4">
         <div
@@ -84,7 +85,7 @@ function Header({
           )}
         </div>
         <div className="hover:cursor-pointer relative inline-flex justify-center w-16 rounded-md border border-gray-300 shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 items-center">
-        <MdLightMode />
+          <MdLightMode />
         </div>
         <Selector
           selectedValue={langValue}

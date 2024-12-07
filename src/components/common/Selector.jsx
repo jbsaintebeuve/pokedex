@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function Selector({ selectedValue, onChange, options, icon: Icon }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false)
@@ -38,9 +38,8 @@ function Selector({ selectedValue, onChange, options, icon: Icon }) {
             {options.map((option) => (
               <button
                 key={option}
-                className={`${
-                  selectedValue === option ? 'bg-gray-100' : ''
-                } flex items- px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full`}
+                className={`${selectedValue === option ? 'bg-gray-100' : ''
+                  } flex items- px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full`}
                 onClick={() => handleSelectChange(option)}
                 role="menuitem"
               >

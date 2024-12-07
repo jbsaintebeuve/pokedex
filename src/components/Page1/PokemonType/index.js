@@ -1,4 +1,6 @@
 import types from "./PokemonTypes.json";
+import { usePokemonData } from "../../../providers/DataContext";
+import { useEffect } from "react";
 
 function luminance(r, g, b) {
     const a = [r, g, b].map(v => {
@@ -14,25 +16,30 @@ function getTextColor(backgroundColor) {
 }
 
 function PokemonType({ name, langValue }) {
-    const backgroundColor = types[name].backgroundColor;
+
+    const {types} = usePokemonData();
+    const type = types.find(([key]) => key === name);
+    if (!type) return null;
+
+    const backgroundColor = type[1].backgroundColor;
     const textColorClass = getTextColor(backgroundColor);
 
     return (
-        <div
-            style={{ backgroundColor }}
-            className={`
-                ${textColorClass}
-                rounded-xl 
-                text-center 
-                uppercase 
-                font-semibold
-                px-5
-                py-1
-                text-xs
-                min-w-16
-            `}>
-            {types[name].translations[langValue]}
-        </div>
+            <div
+                style={{ backgroundColor }}
+                className={`
+                    ${textColorClass}
+                    rounded-xl 
+                    text-center 
+                    uppercase 
+                    font-semibold
+                    px-5
+                    py-1
+                    text-xs
+                    min-w-16
+                `}>
+                {type[1][langValue]}
+            </div>
     );
 }
 

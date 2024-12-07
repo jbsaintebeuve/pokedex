@@ -9,6 +9,10 @@ export const LangProvider = ({ children }) => {
     localStorage.setItem("lang", langValue);
   }, [langValue]);
 
+  useEffect(() => {
+    console.log("Lang changed to:", langValue);
+  }, [langValue]);
+
   const handleLangValue = (value) => {
     setLang(value);
   };
@@ -23,3 +27,5 @@ export const LangProvider = ({ children }) => {
 export const useLang = () => {
   return useContext(LangContext);
 };
+
+export default LangContext;
