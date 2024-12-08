@@ -70,7 +70,6 @@ export const DataProvider = ({ children }) => {
                 });
                 setPokemonData(response.data.data.pokemons);
                 setLoading(false);
-                // console.log("Pokemon data fetched:", response.data.data.pokemons);
 
             } catch (error) {
                 console.error("Error fetching Pokemon data:", error);
@@ -128,7 +127,6 @@ export const DataProvider = ({ children }) => {
                     return acc;
                 }, {});
                 setTypes(Object.entries(formattedTypes));
-                // console.log("Types fetched:", formattedTypes);
                 setLoading(false);
 
             } catch (error) {
