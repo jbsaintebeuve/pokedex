@@ -1,4 +1,5 @@
-import types from "./PokemonTypes.json";
+import { useEffect, useState } from "react";
+import { useLang } from "../../../providers/LangContext";
 
 function luminance(r, g, b) {
     const a = [r, g, b].map(v => {
@@ -13,26 +14,38 @@ function getTextColor(backgroundColor) {
     return luminance(...rgb) > 0.5 ? 'text-black' : 'text-white';
 }
 
-function PokemonType({ name, langValue }) {
-    const backgroundColor = types[name].backgroundColor;
+function PokemonType({ name, types}) {
+
+    const { langValue } = useLang();
+    const [type, setType] = useState(null);
+    useEffect(() => {
+        if(types.length > 0) {
+            setType(types.find(([key]) => key === name));
+        }
+    }, [types]);
+    if (!type) return null;
+
+    const backgroundColor = type[1].backgroundColor;
     const textColorClass = getTextColor(backgroundColor);
 
     return (
-        <div
-            style={{ backgroundColor }}
-            className={`
-                ${textColorClass}
-                rounded-xl 
-                text-center 
-                uppercase 
-                font-semibold
-                px-5
-                py-1
-                text-xs
-                min-w-16
-            `}>
-            {types[name].translations[langValue]}
-        </div>
+        type && (
+            <div
+                style={{ backgroundColor }}
+                className={`
+                    ${textColorClass}
+                    rounded-xl 
+                    text-center 
+                    uppercase 
+                    font-semibold
+                    px-5
+                    py-1
+                    text-xs
+                    min-w-16
+                `}>
+                {type[1][langValue]}
+            </div>
+        )
     );
 }
 

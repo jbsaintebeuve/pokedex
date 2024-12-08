@@ -1,16 +1,61 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import pokemonData from "../../pokemon.json";
+import { useLang } from "../../providers/LangContext";
 import ButtonPrimary from "../common/ButtonPrimary";
 import ButtonSecondary from "../common/ButtonSecondary";
 import Pokeball from "./Pokeball";
 import PokeballItem from "./PokeballItem";
 import background from "./background.jpg";
 
-function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
+function CatchPokemon({ pokeballs, setPokeballs }) {
   const [pokemon, setPokemon] = useState(
     JSON.parse(localStorage.getItem("spawnedPokemon")) || null
   );
+
+  const { langValue } = useLang();
+  const [pokemonData, setPokemonData] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post('https://beta.pokeapi.co/graphql/v1beta', {
+          query: `
+                 query samplePokeAPIquery {
+                        pokemons: pokemon_v2_pokemonspecies {
+                            name
+                            id
+                            pokemon_v2_pokemonspeciesnames {
+                            name
+                            pokemon_v2_language {
+                                name
+                            }
+                            }
+                            pokemon_v2_pokemons {
+                            pokemon_v2_pokemonsprites {
+                                sprites(path: "other")
+                            }
+                            }
+                        }
+                        }
+
+              `
+        });
+        setPokemonData(response.data.data.pokemons);
+        // setLoading(false);
+      } catch (error) {
+        console.error("Error fetching Pokemon data:", error);
+        // setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Random pokemon:", pokemon);
+  }, [pokemon]);
 
   useEffect(() => {
     localStorage.setItem("spawnedPokemon", JSON.stringify(pokemon));
@@ -105,8 +150,8 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
       );
       setPosition({ x: (window.innerWidth * 2) / 3, y: window.innerHeight - 150 });
       setSelectedPokeball("pokeball");
+    };
   };
-};
 
   const capture = (pokemon, ball) => {
     const captureProbability = {
@@ -127,23 +172,23 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
   };
 
   const handleDragStart = (e) => {
-    e.dataTransfer.setDragImage(new Image(), 0, 0); 
-  
+    e.dataTransfer.setDragImage(new Image(), 0, 0);
+
     const pokemonImg = document.querySelector(".pokemon-image");
-    
+
     if (pokemonImg) {
       let direction = 1;
       let position = -150;
       const range = 200;
       const speed = 5;
-  
+
       const animate = () => {
-        
+
         position += direction * speed;
         if (position >= range || position <= -range) {
-          direction *= -1; 
+          direction *= -1;
         }
-  
+
         pokemonImg.style.transform = `translateX(${position}px) translateY(-70px)`;
 
         requestAnimationFrame(animate);
@@ -152,21 +197,21 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
       animate();
     }
   };
-  
-  
+
+
 
 
   const handleDrag = (e) => {
     if (e.clientX !== 0 && e.clientY !== 0) {
       setPosition({
-        x: e.clientX - 50, 
+        x: e.clientX - 50,
         y: e.clientY - 50,
       });
     }
   };
 
   const handleDragOver = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
   };
 
   return (
@@ -185,7 +230,7 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
 
       {!isOnCapture &&
         pokeballs.find((pokeball) => pokeball.src === selectedPokeball).number >
-          0 && (
+        0 && (
           <div
             className=" z-10"
             draggable="true"
@@ -195,7 +240,7 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
             onDragEnd={handleDrop}
             style={{
               position: 'absolute',
-              left: `${position.x }px`,
+              left: `${position.x}px`,
               top: `${position.y - 50}px`,
               width: '100px',
               height: '100px',
@@ -208,10 +253,14 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
 
       {isModalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-20">
-          <div className="bg-white p-5 rounded-lg w-1/2 flex flex-col items-center">
+          <div className="bg-white p-5 rounded-lg w-1/2 flex flex-col items-center text-black">
             <h1 className="text-2xl font-bold">Félicitation !</h1>
-            <p>Vous avez capturé {pokemon?.names[langvalue]}!</p>
-            <img src={pokemon?.image} alt={pokemon?.names[langvalue]} />
+            <p>Vous avez capturé {pokemon.pokemon_v2_pokemonspeciesnames.find(
+              (name) => name.pokemon_v2_language.name === langValue
+            )?.name || pokemon.name}!</p>
+            <div className="w-1/3 h-auto">
+              <img className="w-full h-full" src={pokemon?.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites["official-artwork"].front_default} alt={pokemon?.name} />
+            </div>
             <div className="flex justify-between w-1/2 gap-5 my-4">
               <Link to={`/pokemon/${pokemon?.id}`} className="w-1/2">
                 <ButtonPrimary>Voir la fiche</ButtonPrimary>
@@ -248,14 +297,19 @@ function CatchPokemon({ langvalue, pokeballs, setPokeballs }) {
         </div>
       )}
       {pokemon && (
-        <img
-          src={pokemon.image}
-          alt="pokemon"
-          className="w-56 absolute bottom-0 left-1/2 transform pokemon-image"
+        <div
           style={{
             transform: `translateX(-100px) translateY(-70px)`
           }}
-        />
+          className="absolute bottom-5 left-1/2 transform pokemon-image w-32 h-auto"
+        >
+          <img
+            src={pokemon.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites.showdown.front_default}
+            alt="pokemon"
+            className="w-full h-full"
+
+          />
+        </div>
       )}
     </div>
   );

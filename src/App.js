@@ -1,6 +1,6 @@
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import './App.css';
+import "./App.css";
 import Layout from "./components/Layout";
 import Main from "./components/Page1/Main";
 import types from "./components/Page1/PokemonType/PokemonTypes.json";
@@ -8,9 +8,12 @@ import PokemonDetails from "./components/Page2/PokemonDetails/PokemonDetails";
 import CatchPokemon from "./components/Page3/CatchPokemon";
 import pokemonData from "./pokemon.json";
 import { LangProvider } from "./providers/LangContext";
+import DataProvider from "./providers/DataContext";
+import GenProvider from "./providers/GenContext";
+import { ThemeProvider } from "./providers/ThemeContext";
 
 function App() {
-  const [langAvailable, setLangAvailable] = useState({})
+  const [langAvailable, setLangAvailable] = useState({});
 
   const initialPokeballs = [
     {
@@ -44,24 +47,50 @@ function App() {
     localStorage.setItem("pokeballs", JSON.stringify(pokeballs));
   }, [pokeballs]);
 
-  useEffect(()=> {
+  useEffect(() => {
     const language = Object.keys(Object.values(types)[0].translations);
     setLangAvailable(language);
-  },[])
+  }, []);
 
   return (
-    <LangProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <LangProvider>
+        <GenProvider>
+        <DataProvider>
+          <ThemeProvider>
         <Routes>
-          <Route path="/" element={<Layout langAvailable={langAvailable} pokeballs={pokeballs} setPokeballs={setPokeballs}/>} >
-            <Route index element={<Main pokemonData={pokemonData}/>} />
-            <Route path="/pokemon/:id" element={<PokemonDetails pokemonData={pokemonData} />} />
-            <Route path="/minigame" element={<CatchPokemon  pokeballs={pokeballs} setPokeballs={setPokeballs} />} />
+          <Route
+            path="/"
+            element={
+              <Layout
+                langAvailable={langAvailable}
+                pokeballs={pokeballs}
+                setPokeballs={setPokeballs}
+              />
+            }
+          >
+            <Route index element={<Main pokemonData={pokemonData} />} />
+            <Route
+              path="/pokemon/:id"
+              element={<PokemonDetails pokemonData={pokemonData} />}
+            />
+            <Route
+              path="/minigame"
+              element={
+                <CatchPokemon
+                  pokeballs={pokeballs}
+                  setPokeballs={setPokeballs}
+                />
+              }
+            />
           </Route>
         </Routes>
-      </BrowserRouter>
+        </ThemeProvider>
+        </DataProvider>
+        </GenProvider>
       </LangProvider>
-  )
+    </BrowserRouter>
+  );
 }
 
 export default App;
