@@ -32,7 +32,6 @@ export const GenProvider = ({ children }) => {
                 });
 
                 setPokemonGen(response.data.data.generations);
-                // console.log(response.data.data.generations);
 
             } catch (error) {
                 console.error("Error fetching Pokedex data:", error);
@@ -41,11 +40,6 @@ export const GenProvider = ({ children }) => {
 
         fetchData();
     }, []);
-
-    // useEffect(() => {
-    //     console.log("Selected Gen:", selectedGen);
-    // }, [selectedGen]);
-
 
     return (
         <GenContext.Provider value={{ pokedexGen, selectedGen, setSelectedGen, loading, setLoading }}>
