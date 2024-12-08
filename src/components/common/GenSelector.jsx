@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useLang } from '../../providers/LangContext'
 import { IoMdArrowDropdown } from 'react-icons/io';
+import { usePokedexData } from '../../providers/GenContext';
 
 function GenSelector({ selectedValue, onChange, options, icon: Icon }) {
     const [isSelectorOpen, setIsSelectorOpen] = useState(false)
 
+    const { setLoading } = usePokedexData();
     const { langValue } = useLang();
 
     const handleSelectChange = (value) => {
         onChange(value)
+        setLoading(true);
         setIsSelectorOpen(false)
     }
+
 
     return (
         <div className="relative inline-block text-left" onMouseLeave={() => setIsSelectorOpen(false)}>
@@ -28,7 +32,7 @@ function GenSelector({ selectedValue, onChange, options, icon: Icon }) {
                         <p className="font-bold">
                             Pokédex
                         </p>
-                        <span className="ml-2 text-xs font-semibold">
+                        <span className="ml-2 text-xs font-semibold text-ellipsis text-nowrap overflow-hidden ... ">
                             {selectedValue.pokemon_v2_generationnames ? selectedValue.pokemon_v2_generationnames.find(name => name.pokemon_v2_language.name === langValue).name : "Génération I"}
                         </span>
                         <IoMdArrowDropdown />

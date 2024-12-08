@@ -7,12 +7,12 @@ function Layout({ langAvailable, pokeballs, setPokeballs }) {
 
   const { darkMode } = useTheme();
 
-  useEffect(() => {
-    console.log("Dark mode:", darkMode);
-  }, [darkMode]);
+  // useEffect(() => {
+  //   console.log("Dark mode:", darkMode);
+  // }, [darkMode]);
 
   return (
-    <main className={`bg-slate-50 dark:bg-gray-900 dark:text-white ${darkMode ? "dark" : ""}`}>
+    <main className={`min-h-screen bg-slate-50 dark:bg-gray-900 dark:text-white ${darkMode ? "dark" : ""}`}>
       <Header langAvailable={langAvailable} pokeballs={pokeballs} setPokeballs={setPokeballs} />
       <Outlet />
     </main>

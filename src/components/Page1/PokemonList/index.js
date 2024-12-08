@@ -11,25 +11,23 @@ import { TbPokeballOff, TbPokeball } from "react-icons/tb";
 import SelectorAlt from "../../common/SelectorAlt";
 import PokemonCard from "../PokemonCard";
 import { usePokemonData } from "../../../providers/DataContext";
+import PokemonCardSkeleton from "../PokemonCard/PokemonCardSkeleton";
+import { usePokedexData } from "../../../providers/GenContext";
 
 function PokemonList({
   searchValue,
   langValue,
-  // pokemonData,
   filterTypeValues,
   valueHeightSlider,
   valueWeightSlider,
 }) {
-  const { pokemonData, loading } = usePokemonData();
-
-  useEffect(() => {
-    console.log("Pokemon data fetched:", pokemonData.length);
-  }, [pokemonData]);
+  const { pokemonData, types } = usePokemonData();
+  const { loading } = usePokedexData();
 
   const [selectedSort, setSelectedSort] = useState("id");
   const sortOptions = ["id", "name", "weight", "height", "type"];
   const [sortOrder, setSortOrder] = useState("asc");
-  const [rangeId, setRangeId] = useState({ min: 0, max: pokemonData.length });
+  const [rangeId, setRangeId] = useState({ min: 1, max: pokemonData.length });
 
   const [displayBookmark, setDisplayBookmark] = useState(false);
   const [bookmarkPokemon, setBookmarkPokemon] = useState(
@@ -41,6 +39,7 @@ function PokemonList({
   );
 
   const [filteredPokemon, setFilteredPokemon] = useState([]);
+
 
   useEffect(() => {
     if(!loading){
@@ -70,9 +69,9 @@ function PokemonList({
         pokemon.pokemon_v2_pokemons[0].height / 10 >= valueHeightSlider[0] &&
         pokemon.pokemon_v2_pokemons[0].height / 10 <= valueHeightSlider[1]
     )
-    // .filter(
-    //   (pokemon) => pokemon.id >= rangeId.min && pokemon.id <= rangeId.max
-    // )
+    .filter(
+      (pokemon) => pokemon.id >= rangeId.min && pokemon.id <= rangeId.max
+    )
     .filter(
       (pokemon) =>
         !displayBookmark || bookmarkPokemon.includes(pokemon.id.toString())
@@ -86,7 +85,7 @@ function PokemonList({
 
   useEffect(() => {
     if (pokemonData.length > 0) {
-      setRangeId((prev) => ({ ...prev, max: pokemonData.length }));
+      setRangeId(() => ({ min: pokemonData[0].id , max: (pokemonData[0].id + pokemonData.length) - 1 }));
     }
   }, [pokemonData]);
 
@@ -223,22 +222,30 @@ function PokemonList({
           />
         </div>
       </div>
-      <section className="flex flex-col md:flex-row md:flex-wrap gap-5">
-        {sortFilteredPokemon(filteredPokemon, selectedSort).length > 0 ? (
-          sortFilteredPokemon(filteredPokemon, selectedSort).map(
-            (pokemon) => (
-              <PokemonCard
-                key={pokemon.id}
-                pokemon={pokemon}
-                langValue={langValue}
-                bookmarkPokemon={bookmarkPokemon}
-                capturedPokemon={capturedPokemon}
-              />
-            )
-          )
+      <section className="flex flex-col md:flex-row md:flex-wrap gap-5 h-full">
+        {loading ? (
+          Array.from({ length: 8 }).map((_, index) => (
+            <PokemonCardSkeleton key={index} />
+          ))
         ) : (
-          <p>Aucun Pokémon trouvé</p>
-        )}
+          sortFilteredPokemon(filteredPokemon, selectedSort).length > 0 ? (
+            sortFilteredPokemon(filteredPokemon, selectedSort).map(
+              (pokemon) => (
+                <PokemonCard
+                  key={pokemon.id}
+                  pokemon={pokemon}
+                  langValue={langValue}
+                  bookmarkPokemon={bookmarkPokemon}
+                  capturedPokemon={capturedPokemon}
+                  types={types}
+                />
+              )
+            )
+          ) : (
+            <p className="h-full w-full flex flex-col justify-center items-center font-bold">Aucun Pokémon trouvé</p>
+          )
+        )
+        }
       </section>
     </div>
   );

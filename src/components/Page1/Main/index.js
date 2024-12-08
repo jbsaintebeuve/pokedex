@@ -1,8 +1,8 @@
 import { useState } from "react";
+import { useLang } from "../../../providers/LangContext";
 import Filter from "../../common/Filter";
 import Search from "../../common/Search";
 import PokemonList from "../PokemonList";
-import { useLang } from "../../../providers/LangContext";
 
 function Main({pokemonData}){
     const [searchValue, setSearchValue] = useState("");

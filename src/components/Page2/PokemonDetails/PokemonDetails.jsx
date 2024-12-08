@@ -1,14 +1,15 @@
-import { Link, useParams } from "react-router-dom";
-import PokemonType from "../../Page1/PokemonType";
-import { HiArrowLongLeft, HiArrowLongRight } from "react-icons/hi2";
-import { TbPokeball } from "react-icons/tb";
-import { FaRegBookmark, FaBookmark } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useLang } from "../../../providers/LangContext";
-import { usePokemonData } from "../../../providers/DataContext";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { HiArrowLongLeft, HiArrowLongRight } from "react-icons/hi2";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
+import { TbPokeball } from "react-icons/tb";
+import LazyLoad from 'react-lazyload';
+import { Link, useParams } from "react-router-dom";
+import { usePokemonData } from "../../../providers/DataContext";
+import { useLang } from "../../../providers/LangContext";
 import Table from "../../common/Table";
+import PokemonType from "../../Page1/PokemonType";
 
 function PokemonDetails() {
   const params = useParams();
@@ -22,7 +23,7 @@ function PokemonDetails() {
   const [pokemon, setPokemon] = useState({});
 
   const { langValue } = useLang();
-  const { pokemonData } = usePokemonData();
+  const { pokemonData, numPokemonData, types } = usePokemonData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -197,9 +198,9 @@ function PokemonDetails() {
           )}
           <p className="col-span-1 col-start-2 gap-2 flex justify-center">
             <span className="font-bold">{pokemon.id}</span> /{" "}
-            {pokemonData.length}
+            {numPokemonData}
           </p>
-          {pokemon.id < pokemonData.length && (
+          {pokemon.id < numPokemonData && (
             <Link
               to={`/pokemon/${pokemon.id + 1}`}
               className="flex justify-end"
@@ -212,13 +213,18 @@ function PokemonDetails() {
         </div>
         <div className="flex md:flex-row flex-col justify-between gap-10">
           <div className="flex flex-col md:w-5/12 gap-5">
-            <div className="cover h-80">
-              <img
-                src={pokemon.pokemon_v2_pokemonsprites[0].sprites}
-                alt={pokemon.name}
-                className="h-full mx-auto"
-              />
-            </div>
+
+            <LazyLoad height={144} offset={100} placeholder={
+              <img src={"./img/pokemon-placeholder.gif"} alt="pokeball" className="h-full" />
+            }>
+              <div className="cover h-80">
+                <img
+                  src={pokemon.pokemon_v2_pokemonsprites[0].sprites}
+                  alt={pokemon.name}
+                  className="h-full mx-auto"
+                />
+              </div>
+            </LazyLoad>
             <div className="flex justify-between items-center md:hidden">
               <h2 className="font-black text-blue-700 text-5xl">
                 {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesnames.find(
@@ -263,7 +269,7 @@ function PokemonDetails() {
               <p className="font-bold">Type:</p>
               <div className="flex gap-5">
                 {pokemon.pokemon_v2_pokemontypes.map((type) => (
-                  <PokemonType key={type.pokemon_v2_type.name} name={type.pokemon_v2_type.name} langValue={langValue} />
+                  <PokemonType key={type.pokemon_v2_type.name} name={type.pokemon_v2_type.name} types={types} />
                 ))}
               </div>
             </div>
@@ -278,7 +284,7 @@ function PokemonDetails() {
                       (name) => name.pokemon_v2_language.name === 'en'
                     )?.name}
                   </p>
-                  <div className="w-8/12 bg-gray-200 rounded-full h-5 relative">
+                  <div className="w-8/12 bg-gray-200 dark:bg-slate-800 rounded-full h-5 relative">
                     <div className={`${getStatColor(stat.base_stat)} h-5 rounded-full`} style={{ width: `${(stat.base_stat / 255) * 100}%` }}></div>
                     <span className="absolute inset-0 flex left-4 justify-left items-center text-xs font-medium text-white">{stat.base_stat}</span>
                   </div>
@@ -317,26 +323,26 @@ function PokemonDetails() {
               </div>
             </div>
             <p className="font-bold hidden md:flex text-xl">n°{transformId(params.id)}</p>
-            <div className="flex flex-col gap-5">
-              <p className="font-bold">Évolution:</p>
-              <div className="flex md:gap-5 justify-between md:justify-normal">
-                {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.length > 1 && (
-                  (pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((evolution) => (
+            {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.length > 1 && (
+              <div className="flex flex-col gap-5">
+                <p className="font-bold">Évolution:</p>
+                <div className="flex flex-wrap md:gap-5 gap-1 gap-y-3 md:justify-normal">
+                  {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((evolution, index) => (
                     <>
                       <Link key={evolution.id} to={`/pokemon/${evolution.id}`}>
                         <p className={`${evolution.id == params.id ? "border-blue-500" : "border-gray-50"} border-2 text-sm md:text-lg rounded-md md:px-4 px-3 py-2 hover:bg-blue-500 hover:text-white`}>{evolution.pokemon_v2_pokemonspeciesnames.find((name) => name.pokemon_v2_language.name === langValue)?.name}</p>
                       </Link>
-                      {evolution.id < pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.length && (
+                      {index < pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.length - 1 && (
                         <div className="flex items-center">
                           <MdKeyboardDoubleArrowRight className="md:text-2xl text-blue-500" />
                         </div>
                       )}
                     </>
                   ))
-                  )
-                )}
+                  }
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex flex-col gap-5">
               <p className="font-bold">Capacités:</p>
               <div className="flex flex-wrap gap-4">
@@ -355,8 +361,12 @@ function PokemonDetails() {
             </div>
           </div>
         </div>
-      </main>
-    ) : (<p>Loading...</p>)
+      </main >
+    ) : (
+      <div className="bg-blue-500 w-screen h-screen absolute top-0 flex flex-col justify-center items-center">
+        <p className="text-white text-2xl">Chargement...</p>
+      </div>
+    )
   );
 }
 export default PokemonDetails;

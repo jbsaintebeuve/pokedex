@@ -1,12 +1,9 @@
 import Slider from "@mui/material/Slider";
 import { useEffect, useState } from "react";
-import pokemonData from "../../pokemon.json";
-import types from "../Page1/PokemonType/PokemonTypes.json";
-import MultiSelector from "./MultiSelector";
+import { usePokemonData } from "../../providers/DataContext";
 import { usePokedexData } from "../../providers/GenContext";
 import GenSelector from "./GenSelector";
-import { usePokemonData } from "../../providers/DataContext";
-import { use } from "react";
+import MultiSelector from "./MultiSelector";
 
 function Filter({
   filterTypeValues,
@@ -18,8 +15,8 @@ function Filter({
   onHeightSliderChange,
 }) {
 
-  const { types, loading, pokemonData } = usePokemonData();
-  const { pokedexGen, selectedGen, setSelectedGen } = usePokedexData();
+  const { types, pokemonData } = usePokemonData();
+  const { pokedexGen, selectedGen, setSelectedGen, loading } = usePokedexData();
 
   const [minMaxWeightValues, setMinMaxWeightValues] = useState({ min: valueWeightSlider[0], max: valueWeightSlider[1] });
   const [minMaxHeightValues, setMinMaxHeightValues] = useState({ min: valueHeightSlider[0], max: valueHeightSlider[1] });
@@ -28,7 +25,6 @@ function Filter({
 
   useEffect(() => {
     if (!loading) {
-      console.log("init min max values");
       setMinMaxWeightValues(pokemonData.reduce(
         (acc, pokemon) => ({
           min: Math.min(acc.min, pokemon.pokemon_v2_pokemons[0].weight / 10),
@@ -46,10 +42,6 @@ function Filter({
       ));
     }
   }, [loading, pokemonData]);
-
-  useEffect(() => {
-    console.log("min max values", minMaxWeightValues, minMaxHeightValues);
-  }, [minMaxWeightValues, minMaxHeightValues]);
 
 
   useEffect(() => {
@@ -92,7 +84,7 @@ function Filter({
             onChange={setSelectedGen}
             options={pokedexGen}
           />
-          {!loading && (
+          {!loading ? (
             <MultiSelector
               selectedValues={filterTypeValues}
               onSelectValue={onFilterTypeChange}
@@ -100,7 +92,17 @@ function Filter({
               name={"Type"}
               langValue={langValue}
             />
-          )}
+          ) : (
+            <div className="relative inline-block text-left  border-blue-700 border-2 rounded-md py-3 w-full">
+              <div className="flex flex-row justify-between items-center mx-4">
+                <p className="font-bold">
+                  <span className="animate-pulse bg-blue-400 dark:bg-blue-700 h-5 w-20 block rounded-md"></span>
+                </p>
+                <span className="animate-pulse bg-blue-400 dark:bg-blue-700 h-2 w-2 block "></span>
+              </div>
+            </div>
+          )
+          }
           <div>
             <p className="text-md font-bold">Poids (kg)</p>
             <Slider

@@ -1,19 +1,61 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import pokemonData from "../../pokemon.json";
+import { useLang } from "../../providers/LangContext";
 import ButtonPrimary from "../common/ButtonPrimary";
 import ButtonSecondary from "../common/ButtonSecondary";
 import Pokeball from "./Pokeball";
 import PokeballItem from "./PokeballItem";
 import background from "./background.jpg";
-import { useLang } from "../../providers/LangContext";
 
 function CatchPokemon({ pokeballs, setPokeballs }) {
   const [pokemon, setPokemon] = useState(
     JSON.parse(localStorage.getItem("spawnedPokemon")) || null
   );
 
-  const { langvalue } = useLang();
+  const { langValue } = useLang();
+  const [pokemonData, setPokemonData] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post('https://beta.pokeapi.co/graphql/v1beta', {
+          query: `
+                 query samplePokeAPIquery {
+                        pokemons: pokemon_v2_pokemonspecies {
+                            name
+                            id
+                            pokemon_v2_pokemonspeciesnames {
+                            name
+                            pokemon_v2_language {
+                                name
+                            }
+                            }
+                            pokemon_v2_pokemons {
+                            pokemon_v2_pokemonsprites {
+                                sprites(path: "other")
+                            }
+                            }
+                        }
+                        }
+
+              `
+        });
+        setPokemonData(response.data.data.pokemons);
+        // setLoading(false);
+      } catch (error) {
+        console.error("Error fetching Pokemon data:", error);
+        // setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log("Random pokemon:", pokemon);
+  }, [pokemon]);
 
   useEffect(() => {
     localStorage.setItem("spawnedPokemon", JSON.stringify(pokemon));
@@ -211,10 +253,14 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
 
       {isModalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-20">
-          <div className="bg-white p-5 rounded-lg w-1/2 flex flex-col items-center">
+          <div className="bg-white p-5 rounded-lg w-1/2 flex flex-col items-center text-black">
             <h1 className="text-2xl font-bold">Félicitation !</h1>
-            <p>Vous avez capturé {pokemon?.names[langvalue]}!</p>
-            <img src={pokemon?.image} alt={pokemon?.names[langvalue]} />
+            <p>Vous avez capturé {pokemon.pokemon_v2_pokemonspeciesnames.find(
+              (name) => name.pokemon_v2_language.name === langValue
+            )?.name || pokemon.name}!</p>
+            <div className="w-1/3 h-auto">
+              <img className="w-full h-full" src={pokemon?.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites["official-artwork"].front_default} alt={pokemon?.name} />
+            </div>
             <div className="flex justify-between w-1/2 gap-5 my-4">
               <Link to={`/pokemon/${pokemon?.id}`} className="w-1/2">
                 <ButtonPrimary>Voir la fiche</ButtonPrimary>
@@ -251,14 +297,19 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
         </div>
       )}
       {pokemon && (
-        <img
-          src={pokemon.image}
-          alt="pokemon"
-          className="w-56 absolute bottom-0 left-1/2 transform pokemon-image"
+        <div
           style={{
             transform: `translateX(-100px) translateY(-70px)`
           }}
-        />
+          className="absolute bottom-5 left-1/2 transform pokemon-image w-32 h-auto"
+        >
+          <img
+            src={pokemon.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites.showdown.front_default}
+            alt="pokemon"
+            className="w-full h-full"
+
+          />
+        </div>
       )}
     </div>
   );

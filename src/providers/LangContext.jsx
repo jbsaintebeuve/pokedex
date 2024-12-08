@@ -9,9 +9,9 @@ export const LangProvider = ({ children }) => {
     localStorage.setItem("lang", langValue);
   }, [langValue]);
 
-  useEffect(() => {
-    console.log("Lang changed to:", langValue);
-  }, [langValue]);
+  // useEffect(() => {
+  //   console.log("Lang changed to:", langValue);
+  // }, [langValue]);
 
   const handleLangValue = (value) => {
     setLang(value);

@@ -5,6 +5,7 @@ const GenContext = createContext();
 export const GenProvider = ({ children }) => {
 
     const [pokedexGen, setPokemonGen] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [selectedGen, setSelectedGen] = useState({
         "name": "generation-i",
         "id": 1,
@@ -41,13 +42,13 @@ export const GenProvider = ({ children }) => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        console.log("Selected Gen:", selectedGen);
-    }, [selectedGen]);
+    // useEffect(() => {
+    //     console.log("Selected Gen:", selectedGen);
+    // }, [selectedGen]);
 
 
     return (
-        <GenContext.Provider value={{ pokedexGen, selectedGen, setSelectedGen }}>
+        <GenContext.Provider value={{ pokedexGen, selectedGen, setSelectedGen, loading, setLoading }}>
             {children}
         </GenContext.Provider>
     );

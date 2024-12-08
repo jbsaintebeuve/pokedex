@@ -28,7 +28,7 @@ function MultiSelector({ selectedValues, onSelectValue, options, name, langValue
             <p className="font-bold">
               {name}
               {selectedValues.length > 0 && (
-                <span className="ml-2 text-xs font-semibold">
+                <span className="ml-2 text-xs font-semibold  text-ellipsis text-nowrap overflow-hidden ...">
                   ({selectedValues.length}{" "}
                   {selectedValues.length > 1 ? "sélectionnés" : "sélectionné"})
                 </span>

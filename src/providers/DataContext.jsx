@@ -1,14 +1,41 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from 'axios';
 import { usePokedexData } from "./GenContext";
+
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
 
     const [pokemonData, setPokemonData] = useState([]);
-    const { selectedGen } = usePokedexData();
+    const [numPokemonData, setNumPokemonData] = useState([]);
     const [types, setTypes] = useState({});
-    const [loading, setLoading] = useState(true);
+
+    const { loading, setLoading, selectedGen } = usePokedexData();
+
+    useEffect(() => {
+        const fetchNumPokemonData = async () => {
+            try {
+                const response = await axios.post('https://beta.pokeapi.co/graphql/v1beta', {
+                    query: `
+                     query {
+                        numPokemon: pokemon_v2_pokemonspecies(order_by: {id: asc}) {
+                            id
+                        }
+                    }
+
+                    `
+                });
+                setNumPokemonData(response.data.data.numPokemon.length);
+                setLoading(false);
+                // console.log("Pokemon data fetched:", response.data.data.pokemons);
+
+            } catch (error) {
+                console.error("Error fetching Pokemon data:", error);
+                setLoading(false);
+            }
+        }
+        fetchNumPokemonData();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +83,7 @@ export const DataProvider = ({ children }) => {
     }, [selectedGen]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchTypesData = async () => {
             try {
                 const response = await axios.post('https://beta.pokeapi.co/graphql/v1beta', {
                     query: `
@@ -111,11 +138,11 @@ export const DataProvider = ({ children }) => {
             }
         };
 
-        fetchData();
-    }, []);
+        fetchTypesData();
+    }, [selectedGen]);
 
     return (
-        <DataContext.Provider value={{ pokemonData, types, loading }}>
+        <DataContext.Provider value={{ pokemonData, numPokemonData, types, loading, setLoading }}>
             {children}
         </DataContext.Provider>
     );
