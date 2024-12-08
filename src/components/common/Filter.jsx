@@ -96,9 +96,9 @@ function Filter({
             <div className="relative inline-block text-left  border-blue-700 border-2 rounded-md py-3 w-full">
               <div className="flex flex-row justify-between items-center mx-4">
                 <p className="font-bold">
-                  <span className="animate-pulse bg-blue-400 dark:bg-blue-700 h-5 w-20 block rounded-md"></span>
+                  <span className="animate-pulse bg-blue-200 dark:bg-blue-700 h-5 w-20 block rounded-md"></span>
                 </p>
-                <span className="animate-pulse bg-blue-400 dark:bg-blue-700 h-2 w-2 block "></span>
+                <span className="animate-pulse bg-blue-200 dark:bg-blue-700 h-2 w-2 block "></span>
               </div>
             </div>
           )

@@ -10,7 +10,9 @@ import background from "./background.jpg";
 
 function CatchPokemon({ pokeballs, setPokeballs }) {
   const [pokemon, setPokemon] = useState(
-    JSON.parse(localStorage.getItem("spawnedPokemon")) || null
+    localStorage.getItem("spawnedPokemon") && localStorage.getItem("spawnedPokemon") !== "undefined"
+      ? JSON.parse(localStorage.getItem("spawnedPokemon"))
+      : null
   );
 
   const { langValue } = useLang();
@@ -53,9 +55,9 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("Random pokemon:", pokemon);
-  }, [pokemon]);
+  // useEffect(() => {
+  //   console.log("Random pokemon:", pokemon);
+  // }, [pokemon]);
 
   useEffect(() => {
     localStorage.setItem("spawnedPokemon", JSON.stringify(pokemon));
@@ -63,7 +65,9 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
 
   const [catchingInProgress, setCatchingInProgress] = useState(false);
   const [capturedPokemon, setCapturedPokemon] = useState(
-    JSON.parse(localStorage.getItem("capturedPokemon")) || []
+    localStorage.getItem("capturedPokemon") && localStorage.getItem("capturedPokemon") !== "undefined"
+      ? JSON.parse(localStorage.getItem("capturedPokemon"))
+      : []
   );
 
   useEffect(() => {
@@ -76,26 +80,32 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
   const [position, setPosition] = useState({ x: (window.innerWidth * 2) / 3, y: window.innerHeight - 150 });
 
   const summonPokemon = (storedPokemon) => {
-    setIsOnCapture(false);
-    setIsModalOpen(false);
+    if (pokemonData.length > 0) {
+      setIsOnCapture(false);
+      setIsModalOpen(false);
 
-    if (storedPokemon === null) {
-      console.log("pokemon storage empty");
-      const random = Math.floor(Math.random() * pokemonData.length);
-      setPokemon(pokemonData[random]);
-    } else {
-      setPokemon(storedPokemon);
+      if (storedPokemon === null) {
+        console.log("pokemon storage empty");
+        const random = Math.floor(Math.random() * pokemonData.length);
+        setPokemon(pokemonData[random]);
+        console.log(pokemonData[random]);
+      } else {
+        setPokemon(storedPokemon);
+      }
+
+      const pokemonImg = document.querySelector(".pokemon-image");
+      pokemonImg?.classList.remove("hidden");
     }
-
-    const pokemonImg = document.querySelector(".pokemon-image");
-    pokemonImg?.classList.remove("hidden");
   };
-
   useEffect(() => {
-    if (!pokemon) {
-      summonPokemon();
-    }
-  }, [pokemon]);
+    summonPokemon(null);
+  }, [pokemonData]);
+
+  // useEffect(() => {
+  //   if (!pokemon || pokemon === null || pokemon === undefined) {
+  //     summonPokemon(null);
+  //   }
+  // }, [pokemon]);
 
   useEffect(() => {
     localStorage.setItem("capturedPokemon", JSON.stringify(capturedPokemon));
