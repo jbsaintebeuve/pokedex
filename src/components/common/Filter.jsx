@@ -136,10 +136,10 @@ function Filter({
             Apply
           </button> */}
             <button
-              className="font-bold text-sm w-1/3 py-3 rounded-md bg-blue-700 text-white dark:bg-blue-800 dark:text-white dark:hover:bg-blue-500"
+              className="font-bold text-sm min-w-fit px-5 py-3 rounded-md bg-blue-700 text-white dark:bg-blue-800 dark:text-white dark:hover:bg-blue-500"
               onClick={resetFilters}
             >
-              Reset
+              Réinitialiser
             </button>
           </div>
         </div>
