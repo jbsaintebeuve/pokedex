@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 function Selector({ selectedValue, onChange, options, icon: Icon }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false)

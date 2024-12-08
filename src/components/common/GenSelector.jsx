@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
-import { useLang } from '../../providers/LangContext'
+import { useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import { usePokedexData } from '../../providers/GenContext';
+import { useLang } from '../../providers/LangContext';
 
 function GenSelector({ selectedValue, onChange, options, icon: Icon }) {
     const [isSelectorOpen, setIsSelectorOpen] = useState(false)

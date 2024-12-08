@@ -13,16 +13,17 @@ import PokemonCard from "../PokemonCard";
 import { usePokemonData } from "../../../providers/DataContext";
 import PokemonCardSkeleton from "../PokemonCard/PokemonCardSkeleton";
 import { usePokedexData } from "../../../providers/GenContext";
+import { useLang } from "../../../providers/LangContext";
 
 function PokemonList({
   searchValue,
-  langValue,
   filterTypeValues,
   valueHeightSlider,
   valueWeightSlider,
 }) {
   const { pokemonData, types } = usePokemonData();
   const { loading } = usePokedexData();
+  const {langValue} = useLang();
 
   const [selectedSort, setSelectedSort] = useState("id");
   const sortOptions = ["id", "name", "weight", "height", "type"];
@@ -30,13 +31,9 @@ function PokemonList({
   const [rangeId, setRangeId] = useState({ min: 1, max: pokemonData.length });
 
   const [displayBookmark, setDisplayBookmark] = useState(false);
-  const [bookmarkPokemon, setBookmarkPokemon] = useState(
-    JSON.parse(localStorage.getItem("bookmarkPokemon")) || []
-  );
+  const bookmarkPokemon = JSON.parse(localStorage.getItem("bookmarkPokemon")) || [];
   const [displayCaptured, setDisplayCaptured] = useState(false);
-  const [capturedPokemon, setCapturedPokemon] = useState(
-    JSON.parse(localStorage.getItem("capturedPokemon")) || []
-  );
+  const capturedPokemon = JSON.parse(localStorage.getItem("capturedPokemon")) || [];
 
   const [filteredPokemon, setFilteredPokemon] = useState([]);
 
@@ -98,6 +95,7 @@ function PokemonList({
         if (sortOrder === "desc") {
           return pokemonList.sort((a, b) => b.id - a.id);
         }
+        break;
       case "name":
         if (sortOrder === "asc") {
           return pokemonList.sort((a, b) =>
@@ -113,6 +111,7 @@ function PokemonList({
             )
           );
         }
+        break;
       case "weight":
         if (sortOrder === "asc") {
           return pokemonList.sort((a, b) => a.pokemon_v2_pokemons[0].weight - b.pokemon_v2_pokemons[0].weight);
@@ -120,6 +119,7 @@ function PokemonList({
         if (sortOrder === "desc") {
           return pokemonList.sort((a, b) => b.pokemon_v2_pokemons[0].weight - a.pokemon_v2_pokemons[0].weight);
         }
+        break;
       case "height":
         if (sortOrder === "asc") {
           return pokemonList.sort((a, b) => a.pokemon_v2_pokemons[0].height - b.pokemon_v2_pokemons[0].height);
@@ -127,6 +127,7 @@ function PokemonList({
         if (sortOrder === "desc") {
           return pokemonList.sort((a, b) => b.pokemon_v2_pokemons[0].height - a.pokemon_v2_pokemons[0].height);
         }
+        break;
       case "type":
         if (sortOrder === "asc") {
           return pokemonList.sort((a, b) =>
@@ -142,6 +143,7 @@ function PokemonList({
             )
           );
         }
+        break;
       default:
         return pokemonList;
     }

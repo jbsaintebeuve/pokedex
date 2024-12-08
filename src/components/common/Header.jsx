@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
 import { FaFlag } from "react-icons/fa";
+import { FiMenu } from "react-icons/fi";
 import { MdLightMode, MdModeNight } from "react-icons/md";
 import { TbPokeball } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import { useLang } from "../../providers/LangContext";
+import { useTheme } from "../../providers/ThemeContext";
 import Selector from "./Selector";
 import Toast from "./Toast";
-import { useLang } from "../../providers/LangContext";
-import { usePokemonData } from "../../providers/DataContext";
-import { useTheme } from "../../providers/ThemeContext";
-import { FiMenu } from "react-icons/fi";
 
 function Header({
-  langAvailable,
   pokeballs,
   setPokeballs,
 }) {
   const [isPokeballAvailable, setIsPokeballAvailable] = useState(false);
   const [toastData, setToastData] = useState({ bool: false, message: "" });
 
-  const { langValue, handleLangValue } = useLang();
+  const { langValue, handleLangValue, langAvailable } = useLang();
   const { darkMode, handleDarkValue } = useTheme();
 
   const [isOpened, setIsOpened] = useState(false);
