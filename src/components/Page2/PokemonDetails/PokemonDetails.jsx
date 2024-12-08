@@ -224,7 +224,7 @@ function PokemonDetails() {
               </div>
             </LazyLoad>
             <div className="flex justify-between items-center md:hidden">
-              <h2 className="font-black text-blue-700 text-5xl">
+              <h2 className="font-black text-blue-700 text-4xl">
                 {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_pokemonspeciesnames.find(
                   (name) => name.pokemon_v2_language.name === langValue
                 )?.name}
@@ -252,7 +252,7 @@ function PokemonDetails() {
                 )}
               </div>
             </div>
-            <p className="font-bold text-xl flex md:hidden">n°{transformId(params.id)}</p>
+            <p className="font-bold text-lg flex md:hidden">n°{transformId(params.id)}</p>
             <div className="grid grid-cols-2 gap-4 text-lg">
               <p className="text-gray-700 dark:text-gray-300">
                 <span className="dark:text-white text-black font-bold">Poids: </span>
