@@ -33,7 +33,7 @@ function GenSelector({ selectedValue, onChange, options, icon: Icon }) {
                             Pokédex
                         </p>
                         <span className="ml-2 text-xs font-semibold text-ellipsis text-nowrap overflow-hidden ... ">
-                            {selectedValue.pokemon_v2_generationnames ? selectedValue.pokemon_v2_generationnames.find(name => name.pokemon_v2_language.name === langValue).name : "Génération I"}
+                            {selectedValue.pokemon_v2_generationnames ? selectedValue.pokemon_v2_generationnames.find(name => name.pokemon_v2_language.name === langValue)?.name : "Génération I"}
                         </span>
                         <IoMdArrowDropdown />
                     </div>
@@ -57,7 +57,7 @@ function GenSelector({ selectedValue, onChange, options, icon: Icon }) {
                                 onClick={() => handleSelectChange(option)}
                                 role="menuitem"
                             >
-                                {option.pokemon_v2_generationnames.find(name => name.pokemon_v2_language.name === langValue).name}
+                                {option.pokemon_v2_generationnames.find(name => name.pokemon_v2_language.name === langValue)?.name || option.pokemon_v2_generationnames.find(name => name.pokemon_v2_language.name === 'en').name}
                             </button>
                         ))}
                     </div>
