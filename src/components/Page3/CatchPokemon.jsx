@@ -18,6 +18,7 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
   const { langValue } = useLang();
   const [pokemonData, setPokemonData] = useState([]);
 
+  const isMobile = window.innerWidth <= 768;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -184,32 +185,31 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
   const handleDragStart = (e) => {
     e.dataTransfer.setDragImage(new Image(), 0, 0);
 
-    const pokemonImg = document.querySelector(".pokemon-image");
+    if (!isMobile) {
+      const pokemonImg = document.querySelector(".pokemon-image");
 
-    if (pokemonImg) {
-      let direction = 1;
-      let position = -150;
-      const range = 200;
-      const speed = 5;
+      if (pokemonImg) {
+        let direction = 1;
+        let position = -150;
+        const range = 200;
+        const speed = 5;
 
-      const animate = () => {
+        const animate = () => {
 
-        position += direction * speed;
-        if (position >= range || position <= -range) {
-          direction *= -1;
-        }
+          position += direction * speed;
+          if (position >= range || position <= -range) {
+            direction *= -1;
+          }
 
-        pokemonImg.style.transform = `translateX(${position}px) translateY(-70px)`;
+          pokemonImg.style.transform = `translateX(${position}px) translateY(-70px)`;
 
-        requestAnimationFrame(animate);
-      };
+          requestAnimationFrame(animate);
+        };
 
-      animate();
+        animate();
+      }
     }
   };
-
-
-
 
   const handleDrag = (e) => {
     if (e.clientX !== 0 && e.clientY !== 0) {
@@ -218,6 +218,14 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
         y: e.clientY - 50,
       });
     }
+  };
+
+  const handleTouchMove = (e) => {
+    const touch = e.touches[0];
+    setPosition({
+      x: touch.clientX - 50,
+      y: touch.clientY - 50,
+    });
   };
 
   const handleDragOver = (e) => {
@@ -243,11 +251,13 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
         0 && (
           <div
             className=" z-10"
-            draggable="true"
-            onDragStart={handleDragStart}
-            onDrag={handleDrag}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDrop}
+            draggable={!isMobile}
+            onDragStart={!isMobile ? handleDragStart : null}
+            onDrag={!isMobile ? handleDrag : null}
+            onDragOver={!isMobile ? handleDragOver : null}
+            onDragEnd={!isMobile ? handleDrop : null}
+            onTouchMove={isMobile ? handleTouchMove : null}
+            onTouchEnd={isMobile ? handleDrop : null}
             style={{
               position: 'absolute',
               left: `${position.x}px`,
@@ -263,7 +273,7 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
 
       {isModalOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-20">
-          <div className="bg-white p-5 rounded-lg w-1/2 flex flex-col items-center text-black">
+          <div className="bg-white p-5 rounded-lg md:w-1/2 w-11/12 mx-auto flex flex-col items-center text-black">
             <h1 className="text-2xl font-bold">Félicitation !</h1>
             <p>Vous avez capturé {pokemon.pokemon_v2_pokemonspeciesnames.find(
               (name) => name.pokemon_v2_language.name === langValue
@@ -271,7 +281,7 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
             <div className="w-1/3 h-auto">
               <img className="w-full h-full" src={pokemon?.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites["official-artwork"].front_default} alt={pokemon?.name} />
             </div>
-            <div className="flex justify-between w-1/2 gap-5 my-4">
+            <div className="flex justify-between md:w-1/2 w-full gap-5 my-4">
               <Link to={`/pokemon/${pokemon?.id}`} className="w-1/2">
                 <ButtonPrimary>Voir la fiche</ButtonPrimary>
               </Link>
@@ -309,9 +319,9 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
       {pokemon && (
         <div
           style={{
-            transform: `translateX(-100px) translateY(-70px)`
+            transform: `${!isMobile ? "translateX(-100px)" : ""} translateY(-70px)`
           }}
-          className="absolute bottom-5 left-1/2 transform pokemon-image w-32 h-auto"
+          className="absolute bottom-5 md:left-1/2 left-1/3 transform pokemon-image md:w-32 w-36 h-auto"
         >
           <img
             src={pokemon.pokemon_v2_pokemons[0].pokemon_v2_pokemonsprites[0].sprites.showdown.front_default}
