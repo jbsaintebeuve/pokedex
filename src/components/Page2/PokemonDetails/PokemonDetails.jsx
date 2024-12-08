@@ -5,7 +5,7 @@ import { HiArrowLongLeft, HiArrowLongRight } from "react-icons/hi2";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { TbPokeball } from "react-icons/tb";
 import LazyLoad from 'react-lazyload';
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { usePokemonData } from "../../../providers/DataContext";
 import { useLang } from "../../../providers/LangContext";
 import Table from "../../common/Table";
@@ -13,6 +13,7 @@ import PokemonType from "../../Page1/PokemonType";
 
 function PokemonDetails() {
   const params = useParams();
+  const navigate = useNavigate();
   const transformId = (number) => {
     const str = "" + number;
     const pad = "000";
@@ -26,6 +27,10 @@ function PokemonDetails() {
   const { numPokemonData, types } = usePokemonData();
 
   useEffect(() => {
+    if (isNaN(params.id)) {
+      navigate("/nopage");
+      return;
+    }
     const fetchData = async () => {
       try {
         const response = await axios.post('https://beta.pokeapi.co/graphql/v1beta', {
@@ -141,7 +146,7 @@ function PokemonDetails() {
     };
 
     fetchData();
-  }, [params.id]);
+  }, [params.id, navigate]);
 
   const [bookmarkPokemon, setBookmarkPokemon] = useState(
     JSON.parse(localStorage.getItem("bookmarkPokemon")) || []
