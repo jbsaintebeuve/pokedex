@@ -27,7 +27,6 @@ export const DataProvider = ({ children }) => {
                 });
                 setNumPokemonData(response.data.data.numPokemon.length);
                 setLoading(false);
-                // console.log("Pokemon data fetched:", response.data.data.pokemons);
 
             } catch (error) {
                 console.error("Error fetching Pokemon data:", error);

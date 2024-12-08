@@ -41,24 +41,17 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
                             }
                             }
                         }
-                        }
-
+                      }
               `
         });
         setPokemonData(response.data.data.pokemons);
-        // setLoading(false);
       } catch (error) {
         console.error("Error fetching Pokemon data:", error);
-        // setLoading(false);
       }
     };
 
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   console.log("Random pokemon:", pokemon);
-  // }, [pokemon]);
 
   useEffect(() => {
     localStorage.setItem("spawnedPokemon", JSON.stringify(pokemon));
@@ -86,10 +79,8 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
       setIsModalOpen(false);
 
       if (storedPokemon === null) {
-        console.log("pokemon storage empty");
         const random = Math.floor(Math.random() * pokemonData.length);
         setPokemon(pokemonData[random]);
-        console.log(pokemonData[random]);
       } else {
         setPokemon(storedPokemon);
       }
@@ -101,12 +92,6 @@ function CatchPokemon({ pokeballs, setPokeballs }) {
   useEffect(() => {
     summonPokemon(null);
   }, [pokemonData]);
-
-  // useEffect(() => {
-  //   if (!pokemon || pokemon === null || pokemon === undefined) {
-  //     summonPokemon(null);
-  //   }
-  // }, [pokemon]);
 
   useEffect(() => {
     localStorage.setItem("capturedPokemon", JSON.stringify(capturedPokemon));

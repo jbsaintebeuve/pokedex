@@ -4,11 +4,11 @@ import { usePokemonData } from "../../providers/DataContext";
 import { usePokedexData } from "../../providers/GenContext";
 import GenSelector from "./GenSelector";
 import MultiSelector from "./MultiSelector";
+import { useLang } from "../../providers/LangContext";
 
 function Filter({
   filterTypeValues,
   onFilterTypeChange,
-  langValue,
   valueWeightSlider,
   valueHeightSlider,
   onWeightSliderChange,
@@ -17,6 +17,8 @@ function Filter({
 
   const { types, pokemonData } = usePokemonData();
   const { pokedexGen, selectedGen, setSelectedGen, loading } = usePokedexData();
+
+  const { langValue } = useLang();
 
   const [minMaxWeightValues, setMinMaxWeightValues] = useState({ min: valueWeightSlider[0], max: valueWeightSlider[1] });
   const [minMaxHeightValues, setMinMaxHeightValues] = useState({ min: valueHeightSlider[0], max: valueHeightSlider[1] });
@@ -132,9 +134,6 @@ function Filter({
             />
           </div>
           <div className="flex gap-3">
-            {/* <button className="font-bold text-sm w-1/3 py-3 border-2 border-yellow-400 rounded-md text-blue-700 bg-yellow-400 hover:bg-white hover:border-yellow-400 hover:text-yellow-400">
-            Apply
-          </button> */}
             <button
               className="font-bold text-sm min-w-fit px-5 py-3 rounded-md bg-blue-700 text-white dark:bg-blue-800 dark:text-white dark:hover:bg-blue-500"
               onClick={resetFilters}

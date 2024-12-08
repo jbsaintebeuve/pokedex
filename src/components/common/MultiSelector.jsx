@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { IoMdArrowDropdown } from "react-icons/io";
+import { useState } from "react";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 function MultiSelector({ selectedValues, onSelectValue, options, name, langValue }) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);

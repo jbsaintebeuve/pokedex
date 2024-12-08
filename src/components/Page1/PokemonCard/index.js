@@ -4,10 +4,10 @@ import { TbPokeball } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import PokemonType from "../PokemonType";
 import LazyLoad from 'react-lazyload';
+import { useLang } from "../../../providers/LangContext";
 
 function PokemonCard({
   pokemon,
-  langValue,
   bookmarkPokemon,
   capturedPokemon,
   types,
@@ -18,6 +18,8 @@ function PokemonCard({
     const ans = pad.substring(0, pad.length - str.length) + str;
     return ans;
   };
+
+  const {langValue} = useLang();
 
   return (
     <>

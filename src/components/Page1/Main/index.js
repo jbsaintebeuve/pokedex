@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { useLang } from "../../../providers/LangContext";
 import Filter from "../../common/Filter";
 import Search from "../../common/Search";
 import PokemonList from "../PokemonList";
 
-function Main({pokemonData}){
-    const [searchValue, setSearchValue] = useState("");
+function Main(){
+    const [searchValue, setSearchValue] = useState(localStorage.getItem("searchValue") || "");
     const [filterTypeValues, setFilterValue] = useState([]);
     const [valueWeightSlider, setValueWeightSlider] = useState([0,10000]);
     const [valueHeightSlider, setValueHeightSlider] = useState([0,10000]);
     
-    const { langValue } = useLang();
     const handleSearchChange = (value) => {
-        setSearchValue(value)
+        setSearchValue(value);
+        localStorage.setItem("searchValue", value);
     }
     const handleFilterTypeChange = (value) => {
         setFilterValue(value)
@@ -30,8 +29,8 @@ function Main({pokemonData}){
             <h1 className="text-5xl font-black text-blue-700 text-center dark:text-blue-400">Pokédex</h1>
             <Search searchValue={searchValue} onSearchChange={handleSearchChange} />
             <div className="flex flex-col md:flex-row gap-5">
-                <Filter filterTypeValues={filterTypeValues} onFilterTypeChange={handleFilterTypeChange} langValue={langValue} valueHeightSlider={valueHeightSlider} valueWeightSlider={valueWeightSlider} onWeightSliderChange={handleWeightSliderChange} onHeightSliderChange={handleHeightSliderChange}/>
-                <PokemonList searchValue={searchValue} langValue={langValue} pokemonData={pokemonData} filterTypeValues={filterTypeValues} valueHeightSlider={valueHeightSlider} valueWeightSlider={valueWeightSlider}/>
+                <Filter filterTypeValues={filterTypeValues} onFilterTypeChange={handleFilterTypeChange} valueHeightSlider={valueHeightSlider} valueWeightSlider={valueWeightSlider} onWeightSliderChange={handleWeightSliderChange} onHeightSliderChange={handleHeightSliderChange}/>
+                <PokemonList searchValue={searchValue} filterTypeValues={filterTypeValues} valueHeightSlider={valueHeightSlider} valueWeightSlider={valueWeightSlider}/>
             </div>
         </div>
         </>

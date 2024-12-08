@@ -23,7 +23,7 @@ function PokemonDetails() {
   const [pokemon, setPokemon] = useState({});
 
   const { langValue } = useLang();
-  const { pokemonData, numPokemonData, types } = usePokemonData();
+  const { numPokemonData, types } = usePokemonData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,7 +133,6 @@ function PokemonDetails() {
         const pokemonData = response.data.data.pokemon[0];
         pokemonData.pokemon_v2_pokemonmoves = response.data.data.pokemon_v2_move;
         setPokemon(pokemonData);
-        console.log("Pokemon data fetched:", pokemonData);
         setLoading(false);
 
       } catch (error) {
@@ -150,9 +149,7 @@ function PokemonDetails() {
   useEffect(() => {
     localStorage.setItem("bookmarkPokemon", JSON.stringify(bookmarkPokemon));
   }, [bookmarkPokemon]);
-  const [capturedPokemon, setCapturedPokemon] = useState(
-    JSON.parse(localStorage.getItem("capturedPokemon")) || []
-  )
+  const capturedPokemon = JSON.parse(localStorage.getItem("capturedPokemon")) || [];
 
   const columns = [
     {
@@ -170,10 +167,6 @@ function PokemonDetails() {
     { Header: 'Précision', accessor: 'accuracy' },
     { Header: 'PP', accessor: 'pp' }
   ];
-
-  useEffect(() => {
-    console.log(columns);
-  }, [columns]);
 
   const getStatColor = (stat) => {
     if (stat <= 50) return 'bg-red-600';
@@ -268,8 +261,8 @@ function PokemonDetails() {
             <div className="flex flex-col gap-2">
               <p className="font-bold">Type:</p>
               <div className="flex gap-5">
-                {pokemon.pokemon_v2_pokemontypes.map((type) => (
-                  <PokemonType key={type.pokemon_v2_type.name} name={type.pokemon_v2_type.name} types={types} />
+                {pokemon.pokemon_v2_pokemontypes.map((type, index) => (
+                  <PokemonType key={"type-" + index} name={type.pokemon_v2_type.name} types={types} />
                 ))}
               </div>
             </div>
@@ -329,8 +322,8 @@ function PokemonDetails() {
                 <div className="flex flex-wrap md:gap-5 gap-1 gap-y-3 md:justify-normal">
                   {pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.map((evolution, index) => (
                     <>
-                      <Link key={evolution.id} to={`/pokemon/${evolution.id}`}>
-                        <p className={`${evolution.id == params.id ? "border-blue-500" : "border-gray-50"} border-2 text-sm md:text-lg rounded-md md:px-4 px-3 py-2 hover:bg-blue-500 hover:text-white`}>{evolution.pokemon_v2_pokemonspeciesnames.find((name) => name.pokemon_v2_language.name === langValue)?.name}</p>
+                      <Link key={"evo-" + evolution.id} to={`/pokemon/${evolution.id}`}>
+                        <p className={`${evolution.id.toString() === params.id ? "border-blue-500" : "border-gray-50"} border-2 text-sm md:text-lg rounded-md md:px-4 px-3 py-2 hover:bg-blue-500 hover:text-white`}>{evolution.pokemon_v2_pokemonspeciesnames.find((name) => name.pokemon_v2_language.name === langValue)?.name}</p>
                       </Link>
                       {index < pokemon.pokemon_v2_pokemonspecy.pokemon_v2_evolutionchain.pokemon_v2_pokemonspecies.length - 1 && (
                         <div className="flex items-center">

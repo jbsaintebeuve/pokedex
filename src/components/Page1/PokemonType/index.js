@@ -22,7 +22,7 @@ function PokemonType({ name, types}) {
         if(types.length > 0) {
             setType(types.find(([key]) => key === name));
         }
-    }, [types]);
+    }, [types, name]);
     if (!type) return null;
 
     const backgroundColor = type[1].backgroundColor;

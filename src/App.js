@@ -2,18 +2,16 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/Layout";
+import NoPage from "./components/NoPage";
 import Main from "./components/Page1/Main";
-import types from "./components/Page1/PokemonType/PokemonTypes.json";
 import PokemonDetails from "./components/Page2/PokemonDetails/PokemonDetails";
 import CatchPokemon from "./components/Page3/CatchPokemon";
-import pokemonData from "./pokemon.json";
-import { LangProvider } from "./providers/LangContext";
 import DataProvider from "./providers/DataContext";
 import GenProvider from "./providers/GenContext";
+import { LangProvider } from "./providers/LangContext";
 import { ThemeProvider } from "./providers/ThemeContext";
 
 function App() {
-  const [langAvailable, setLangAvailable] = useState({});
 
   const initialPokeballs = [
     {
@@ -47,11 +45,6 @@ function App() {
     localStorage.setItem("pokeballs", JSON.stringify(pokeballs));
   }, [pokeballs]);
 
-  useEffect(() => {
-    const language = Object.keys(Object.values(types)[0].translations);
-    setLangAvailable(language);
-  }, []);
-
   return (
     <BrowserRouter>
       <LangProvider>
@@ -63,16 +56,15 @@ function App() {
             path="/"
             element={
               <Layout
-                langAvailable={langAvailable}
                 pokeballs={pokeballs}
                 setPokeballs={setPokeballs}
               />
             }
           >
-            <Route index element={<Main pokemonData={pokemonData} />} />
+            <Route index element={<Main  />} />
             <Route
               path="/pokemon/:id"
-              element={<PokemonDetails pokemonData={pokemonData} />}
+              element={<PokemonDetails />}
             />
             <Route
               path="/minigame"
@@ -83,6 +75,7 @@ function App() {
                 />
               }
             />
+             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
         </ThemeProvider>

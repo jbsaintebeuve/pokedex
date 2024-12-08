@@ -1,19 +1,14 @@
 import { Outlet } from 'react-router-dom';
-import Header from './common/Header';
 import { useTheme } from '../providers/ThemeContext';
-import { useEffect } from 'react';
+import Header from './common/Header';
 
-function Layout({ langAvailable, pokeballs, setPokeballs }) {
+function Layout({ pokeballs, setPokeballs }) {
 
   const { darkMode } = useTheme();
 
-  // useEffect(() => {
-  //   console.log("Dark mode:", darkMode);
-  // }, [darkMode]);
-
   return (
     <main className={`min-h-screen bg-slate-50 dark:bg-gray-900 dark:text-white ${darkMode ? "dark" : ""}`}>
-      <Header langAvailable={langAvailable} pokeballs={pokeballs} setPokeballs={setPokeballs} />
+      <Header pokeballs={pokeballs} setPokeballs={setPokeballs} />
       <Outlet />
     </main>
   );

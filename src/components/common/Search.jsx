@@ -18,7 +18,6 @@ function Search({ searchValue, onSearchChange }) {
           onChange={handleInputChange}
           placeholder="Rechercher un pokémon"
         />
-        {/* <button className="bg-yellow-400 text-blue-600 font-bold rounded-lg w-2/12 py-3 text-sm">Rechercher</button> */}
       </div>
     </>
   );
