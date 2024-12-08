@@ -23,8 +23,8 @@ function PokemonCard({
     <>
       <Link to={`/pokemon/${pokemon.id}`}>
         <div className="rounded-md border-blue-600 border-2 p-4 flex flex-col gap-5 relative md:w-60">
-          <div className="cover h-36 flex justify-center">
-            <LazyLoad height={144} offset={100} placeholder={
+          <div className="cover h-36 w-auto flex justify-center">
+            <LazyLoad className='w-full flex justify-center items-center' height={144} offset={100} placeholder={
              <img src={"./img/pokemon-placeholder.gif"} alt="pokeball" className="h-full" />
               }>
               <img 
@@ -32,7 +32,7 @@ function PokemonCard({
                 alt={pokemon.pokemon_v2_pokemonspeciesnames.find(
                   (name) => name.pokemon_v2_language.name === langValue
                 )?.name || pokemon.name} 
-                className="h-full" 
+                className="h-full w-auto" 
                 loading="lazy" 
               />
             </LazyLoad>
